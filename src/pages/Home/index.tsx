@@ -1,104 +1,58 @@
 import { Banner } from '../../components/Banner'
 import ProductList from '../../components/ProductList'
-import Game from '../../models/Game'
 
-import resident from '../../assets/images/resident.png'
-import diablo from '../../assets/images/diablo.png'
-import starwars from '../../assets/images/star_wars.png'
-import zelda from '../../assets/images/zelda.png'
+import { useEffect, useState } from 'react'
 
-const promocoes: Game[] = [
-  {
-    id: 1,
-    category: 'Ação',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Non porro magnam sapiente sunt cum consequuntur consequatur expedita error eum reiciendis! Quis rem sed voluptatibus labore excepturi enim mollitia! Distinctio, suscipit!',
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250,00'],
-    image: resident
-  },
-  {
-    id: 2,
-    category: 'Ação',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Non porro magnam sapiente sunt cum consequuntur consequatur expedita error eum reiciendis! Quis rem sed voluptatibus labore excepturi enim mollitia! Distinctio, suscipit!',
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250,00'],
-    image: resident
-  },
-  {
-    id: 3,
-    category: 'Ação',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Non porro magnam sapiente sunt cum consequuntur consequatur expedita error eum reiciendis! Quis rem sed voluptatibus labore excepturi enim mollitia! Distinctio, suscipit!',
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250,00'],
-    image: resident
-  },
-  {
-    id: 4,
-    category: 'Ação',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Non porro magnam sapiente sunt cum consequuntur consequatur expedita error eum reiciendis! Quis rem sed voluptatibus labore excepturi enim mollitia! Distinctio, suscipit!',
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250,00'],
-    image: resident
+export interface GalleryItem {
+  type: 'image' | 'video'
+  url: string
+}
+
+export type Game = {
+  id: number
+  name: string
+  description: string
+  release_date?: string
+  prices: {
+    discount?: number
+    old?: number
+    current?: number
   }
-]
-
-const emBreve: Game[] = [
-  {
-    id: 5,
-    category: 'Ação',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Non porro magnam sapiente sunt cum consequuntur consequatur expedita error eum reiciendis! Quis rem sed voluptatibus labore excepturi enim mollitia! Distinctio, suscipit!',
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250,00'],
-    image: zelda
-  },
-  {
-    id: 6,
-    category: 'Ação',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Non porro magnam sapiente sunt cum consequuntur consequatur expedita error eum reiciendis! Quis rem sed voluptatibus labore excepturi enim mollitia! Distinctio, suscipit!',
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250,00'],
-    image: diablo
-  },
-  {
-    id: 7,
-    category: 'Ação',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Non porro magnam sapiente sunt cum consequuntur consequatur expedita error eum reiciendis! Quis rem sed voluptatibus labore excepturi enim mollitia! Distinctio, suscipit!',
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250,00'],
-    image: starwars
-  },
-  {
-    id: 8,
-    category: 'Ação',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Non porro magnam sapiente sunt cum consequuntur consequatur expedita error eum reiciendis! Quis rem sed voluptatibus labore excepturi enim mollitia! Distinctio, suscipit!',
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250,00'],
-    image: resident
+  details: {
+    category: string
+    system: string
+    developer: string
+    publisher: string
+    languages: string[]
   }
-]
+  media: {
+    thumbnail: string
+    cover: string
+    gallery: GalleryItem[]
+  }
+}
 
-const Home = () => (
-  <>
-    <Banner />
-    <ProductList games={promocoes} title="Promoções" background="gray" />
-    <ProductList games={emBreve} title="Em breve" background="black" />
-  </>
-)
+const Home = () => {
+  const [promocoes, setPromocoes] = useState<Game[]>([])
+  const [emBreve, setEmBreve] = useState<Game[]>([])
+
+  useEffect(() => {
+    fetch('https://api-ebac.vercel.app/api/eplay/promocoes')
+      .then((res) => res.json())
+      .then((res) => setPromocoes(res))
+
+    fetch('https://api-ebac.vercel.app/api/eplay/em-breve')
+      .then((res) => res.json())
+      .then((res) => setEmBreve(res))
+  }, [])
+
+  return (
+    <>
+      <Banner />
+      <ProductList games={promocoes} title="Promoções" background="gray" />
+      <ProductList games={emBreve} title="Em breve" background="black" />
+    </>
+  )
+}
 
 export default Home
