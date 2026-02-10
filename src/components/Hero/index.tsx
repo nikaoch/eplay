@@ -1,42 +1,56 @@
 import { Banner, Infos } from './styles'
-import bannerImg from '../../assets/images/fundo_hogwarts.png'
 import Tag from '../Tag'
 import Button from '../Button'
 import { Game } from '../../pages/Home'
 import { formataPreco } from '../ProductList'
+import { add, open } from '../../store/reducers/cart'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../store'
 
 type Props = {
   game: Game
 }
 
-const Hero = ({ game }: Props) => (
-  <Banner style={{ backgroundImage: `url(${bannerImg})` }}>
-    <div className="container">
-      <div>
-        <Tag>{game.details.category}</Tag>
-        <Tag>{game.details.system}</Tag>
-      </div>
+const Hero = ({ game }: Props) => {
+  const dispatch = useDispatch<AppDispatch>()
 
-      <Infos>
-        <h2>{game.name}</h2>
-        <p>
-          {game.prices.discount && (
-            <span>De {formataPreco(game.prices.old)}</span>
+  const addToCart = () => {
+    dispatch(add(game))
+    dispatch(open())
+  }
+
+  return (
+    <Banner style={{ backgroundImage: `url(${game.media.thumbnail})` }}>
+      <div className="container">
+        <div>
+          <Tag>{game.details.category}</Tag>
+          <Tag>{game.details.system}</Tag>
+        </div>
+
+        <Infos>
+          <h2>{game.name}</h2>
+          <p>
+            {game.prices.discount && (
+              <span>De {formataPreco(game.prices.old)}</span>
+            )}
+            {game.prices.current && (
+              <>Por {formataPreco(game.prices.current)}</>
+            )}
+          </p>
+          {game.prices.current && (
+            <Button
+              type="button"
+              title="Clique aqui para adicionar ao carrinho"
+              variant="primary"
+              onClick={addToCart}
+            >
+              Adicionar ao carrinho
+            </Button>
           )}
-          {game.prices.current && <>Por {formataPreco(game.prices.current)}</>}
-        </p>
-        {game.prices.current && (
-          <Button
-            type="button"
-            title="Clique aqui para adicionar ao carrinho"
-            variant="primary"
-          >
-            Adicionar ao carrinho
-          </Button>
-        )}
-      </Infos>
-    </div>
-  </Banner>
-)
+        </Infos>
+      </div>
+    </Banner>
+  )
+}
 
 export default Hero
