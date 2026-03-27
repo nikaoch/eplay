@@ -1,6 +1,6 @@
 import zoom from '../../assets/images/zoom.png'
 import play from '../../assets/images/play.png'
-import fechar from '../../assets/images/fechar.png'
+import closeIcon from '../../assets/images/fechar.png'
 import Section from '../Section'
 import { Item, Items, Action, Modal, ModalContent } from './styles'
 import { useState } from 'react'
@@ -70,17 +70,11 @@ const Gallery = ({ defaultCover, name, items }: Props) => {
           ))}
         </Items>
       </Section>
-      <Modal className={modal.isVisible ? 'visivel' : ''}>
+      <Modal className={modal.isVisible ? 'is-visible' : ''}>
         <ModalContent className="container">
           <header>
             <h4>{name}</h4>
-            <img
-              src={fechar}
-              alt="Icone de fechar"
-              onClick={() => {
-                closeModal()
-              }}
-            />
+            <img src={closeIcon} alt="Icone de fechar" onClick={closeModal} />
           </header>
           {modal.type === 'image' ? (
             <img src={modal.url} />
@@ -88,12 +82,7 @@ const Gallery = ({ defaultCover, name, items }: Props) => {
             <iframe frameBorder={0} src={modal.url} />
           )}
         </ModalContent>
-        <div
-          onClick={() => {
-            closeModal()
-          }}
-          className="overlay"
-        ></div>
+        <div onClick={closeModal} className="overlay"></div>
       </Modal>
     </>
   )
