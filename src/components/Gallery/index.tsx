@@ -4,7 +4,6 @@ import closeIcon from '../../assets/images/fechar.png'
 import Section from '../Section'
 import { Item, Items, Action, Modal, ModalContent } from './styles'
 import { useState } from 'react'
-import { GalleryItem } from '../../pages/Home'
 
 type Props = {
   defaultCover: string
